@@ -2,13 +2,9 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useState } from "react";
 
-function App() {
-  function setSep(event) {
-    setSet(event.target.value);
-  }
+function Formatter() {
 
   const [code, setCode] = useState([]);
-  const [sep, setSet] = useState("");
   const [errord, setError] = useState(false);
 
   function setTextI(event) {
@@ -17,38 +13,15 @@ function App() {
 
   const [text, setText] = useState("");
 
-  function basename(path) {
-    return path.split("/").reverse()[0];
-  }
+
   function handleConvert() {
-    setCode(convert(text).join("\n"));
-  }
-
-  function convert(data) {
-    data = data.replace(/(\t\r\n|\n|\r)/gm, "\\n");
-    console.log(data);
-    try {
-      let res = JSON.parse(data);
-
-      if (Array.isArray(res)) {
-        res = res.map((item) => basename(item));
-        setError(false);
-        return res;
-      } else if (typeof res === "object") {
-        setError(true);
-        return [];
-      }
-    } catch (error) {
-      let res = sep ? data.split(sep) : [data];
-      res = res.map((item) => basename(item));
-      setError(false);
-      return res;
+    try { setCode(JSON.stringify(JSON.parse(text), null, 2)); setError(false)} catch {
+      setError(true);
     }
   }
 
-  function handleConvertJson(params) {
-    setCode(JSON.stringify(convert(text)));
-  }
+
+
 
   return (
     <div className="App">
@@ -115,24 +88,13 @@ function App() {
 
         <main>
           <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-            <input
-              value={sep}
-              onChange={setSep}
-              type="text"
-              id="helper-text"
-              aria-describedby="helper-text-explanation"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="split by (',', ';', '\n'):"
-            />
+
 
             <form>
-              <p class=" mt-5 text-gray-700 flex justify-left">
-                Insert JSON Array or Seprated List or Single Path
-              </p>
               <div class="w-full mt-4 mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                 <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                   <label for="comment" class="sr-only">
-                    Your Path(s)
+                    JSON Input
                   </label>
                   <textarea
                     value={text}
@@ -140,7 +102,7 @@ function App() {
                     id="comment"
                     rows="4"
                     class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                    placeholder="Your Path(s)..."
+                    placeholder="JSON Input"
                     required
                   ></textarea>
                 </div>
@@ -151,13 +113,6 @@ function App() {
                     class="inline-flex mr-3 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
                   >
                     Convert
-                  </button>
-                  <button
-                    onClick={handleConvertJson}
-                    type="button"
-                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
-                  >
-                    Convert to JSON Array
                   </button>
                 </div>
               </div>
@@ -175,7 +130,7 @@ function App() {
                     Copy
                   </button>
                 </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto" style={{"text-align": "left"}}>
                   <pre id="code" class="text-gray-300">
                     <code>
                       <span class="block">{code}</span>
@@ -203,4 +158,4 @@ function App() {
   );
 }
 
-export default App;
+export default Formatter;
